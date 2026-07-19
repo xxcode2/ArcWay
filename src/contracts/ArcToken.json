@@ -1,0 +1,5 @@
+{
+  "abi": [],
+  "bytecode": "0x",
+  "_note": "This is a placeholder. Run `npm run compile:contracts` from the project root to generate the real ABI + bytecode from contracts/contracts/ArcToken.sol."
+}
