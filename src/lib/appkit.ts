@@ -8,8 +8,21 @@ import { AppKit } from "@circle-fin/app-kit";
  *   await kit.send({ from: { adapter, chain }, to, amount, token });
  *   await kit.swap({ from: { adapter, chain }, tokenIn, tokenOut, amountIn, config: { kitKey } });
  *   await kit.bridge({ from: { adapter, chain }, to: { adapter, chain }, amount });
+ *
+ * Lazy-initialized to avoid SSR "window is not defined" errors on Vercel.
  */
-export const kit = new AppKit();
+let _kit: AppKit | null = null;
+export const getKit = () => {
+  if (!_kit) _kit = new AppKit();
+  return _kit;
+};
+
+// Backward-compatible export (still lazy)
+export const kit = new Proxy({} as AppKit, {
+  get(_target, prop) {
+    return getKit()[prop];
+  },
+});
 
 /** Free kit key from Circle Console, required by kit.swap() for fee monetization.
  *  See https://console.circle.com — set VITE_CIRCLE_KIT_KEY in your .env file. */
